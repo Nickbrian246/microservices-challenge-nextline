@@ -6,6 +6,11 @@ import { Task } from './entities/task.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { errorHandler } from '../decorators/error-handler';
 import { ApiSuccessResponse } from '../types/api-success-response';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class TasksService {
@@ -23,9 +28,11 @@ export class TasksService {
   }
 
   @errorHandler()
-  async findAll(): Promise<ApiSuccessResponse<Task[]>> {
-    const data = await this.TasksRepository.find({});
-    return { data };
+  async findAll(options: IPaginationOptions): Promise<Pagination<Task>> {
+    const queryBuilder = this.TasksRepository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.title', 'DESC');
+
+    return paginate<Task>(queryBuilder, options);
   }
 
   @errorHandler()

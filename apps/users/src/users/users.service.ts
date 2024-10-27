@@ -7,6 +7,11 @@ import { User } from './entities/user.entity';
 import { UserDto } from './dto';
 import { ApiSuccessResponse } from '../types/api-success-response';
 import { errorHandler } from '../decorators/error-handler';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 @Injectable()
 export class UsersService {
   constructor(
@@ -20,9 +25,11 @@ export class UsersService {
   }
 
   @errorHandler()
-  async getUsers(): Promise<ApiSuccessResponse<User[]>> {
-    const data = await this.userRepository.find({});
-    return { data };
+  async getUsers(options: IPaginationOptions): Promise<Pagination<User>> {
+    const queryBuilder = this.userRepository.createQueryBuilder('c');
+    queryBuilder.orderBy('c.firstName', 'DESC');
+
+    return paginate<User>(queryBuilder, options);
   }
 
   @errorHandler()

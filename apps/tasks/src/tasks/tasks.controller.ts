@@ -14,8 +14,8 @@ export class TasksController {
   }
 
   @MessagePattern('tasks.findAll')
-  findAll() {
-    return this.tasksService.findAll();
+  findAll(@Payload() { limit, page }: { limit: number; page: number }) {
+    return this.tasksService.findAll({ limit, page });
   }
 
   @MessagePattern('tasks.getTaskById')

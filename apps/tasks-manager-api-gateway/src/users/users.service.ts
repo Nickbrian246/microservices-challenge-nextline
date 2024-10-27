@@ -21,8 +21,8 @@ export class UsersService {
     );
   }
 
-  getAllUsers() {
-    return this.usersClient.send('users.findAll', {}).pipe(
+  getAllUsers(page: number, limit: number) {
+    return this.usersClient.send('users.findAll', { page, limit }).pipe(
       catchError((err) => {
         throw this.microserviceErrorHandler.handleError(err);
       }),

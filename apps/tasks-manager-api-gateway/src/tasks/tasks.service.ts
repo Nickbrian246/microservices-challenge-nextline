@@ -19,8 +19,8 @@ export class TasksService {
     );
   }
 
-  findAll() {
-    return this.tasksService.send('tasks.findAll', {}).pipe(
+  findAll(page: number, limit: number) {
+    return this.tasksService.send('tasks.findAll', { page, limit }).pipe(
       catchError((err) => {
         throw this.microserviceErrorHandler.handleError(err);
       }),
