@@ -32,4 +32,9 @@ export class TasksController {
   remove(@Payload() id: string) {
     return this.tasksService.remove(id);
   }
+
+  @MessagePattern('tasks.deleteTasksByUserId')
+  deleteTasksByUserId(@Payload() id: string) {
+    return this.tasksService.deleteTasksByUserId(id);
+  }
 }

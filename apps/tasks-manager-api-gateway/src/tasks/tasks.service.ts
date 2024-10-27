@@ -52,4 +52,12 @@ export class TasksService {
       }),
     );
   }
+
+  deleteTasksByUserId(id: string) {
+    return this.tasksService.send('tasks.deleteTasksByUserId', id).pipe(
+      catchError((err) => {
+        throw this.microserviceErrorHandler.handleError(err);
+      }),
+    );
+  }
 }

@@ -32,7 +32,7 @@ export class UsersController {
   }
 
   @MessagePattern('users.deleteUserById')
-  deleteUserById(@Payload() { id }: { id: string }) {
+  deleteUserById(@Payload() id: string) {
     return this.usersService.deleteUserById(id);
   }
 }

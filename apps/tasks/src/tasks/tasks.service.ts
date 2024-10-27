@@ -64,4 +64,12 @@ export class TasksService {
     const data = await this.TasksRepository.delete(parseInt(id));
     return { data };
   }
+
+  @errorHandler()
+  async deleteTasksByUserId(
+    id: string,
+  ): Promise<ApiSuccessResponse<DeleteResult>> {
+    const data = await this.TasksRepository.delete({ userId: parseInt(id) });
+    return { data };
+  }
 }
