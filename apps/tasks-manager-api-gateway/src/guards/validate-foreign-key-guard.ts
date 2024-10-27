@@ -39,7 +39,7 @@ export class ValidateForeignKey implements CanActivate {
 
       return true;
     } catch (error) {
-      throw new BadRequestException('Failed to validate user');
+      throw this.microserviceErrorHandler.handleError(error);
     }
   }
 }
