@@ -15,8 +15,8 @@ export class UsersController {
   }
 
   @MessagePattern('users.findAll')
-  getUsers() {
-    return this.usersService.getUsers();
+  getUsers(@Payload() { limit, page }: { limit: number; page: number }) {
+    return this.usersService.getUsers({ limit, page });
   }
 
   @MessagePattern('users.getUserById')
@@ -32,7 +32,7 @@ export class UsersController {
   }
 
   @MessagePattern('users.deleteUserById')
-  deleteUserById(@Payload() { id }: { id: string }) {
+  deleteUserById(@Payload() id: string) {
     return this.usersService.deleteUserById(id);
   }
 }
