@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, UserWithoutEmail } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -43,16 +43,20 @@ export class UsersService {
 
   @errorHandler()
   async updateUserById(
-    id: string,
-    user: UserDto,
+    id: number,
+    user: UserWithoutEmail,
   ): Promise<ApiSuccessResponse<User>> {
-    const updateResult = await this.userRepository.update(id, { ...user });
+    const { firstName, lastName } = user;
+    const updateResult = await this.userRepository.update(+id, {
+      lastName,
+      firstName,
+    });
 
     if (updateResult.affected === 0) {
       throw new Error(`User with id ${id} not found`);
     }
     const data = await this.userRepository.findOne({
-      where: { id: parseInt(id) },
+      where: { id },
     });
 
     return { data };

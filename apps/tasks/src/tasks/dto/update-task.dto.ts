@@ -3,7 +3,7 @@ import { Task } from './task-dto';
 import { IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-class TaskWithoutId extends OmitType(Task, ['id']) {}
+class TaskWithoutId extends OmitType(Task, ['id', 'userId']) {}
 export class UpdateTaskDto {
   @IsString()
   id: string;

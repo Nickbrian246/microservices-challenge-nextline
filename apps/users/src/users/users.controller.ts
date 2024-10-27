@@ -10,7 +10,6 @@ export class UsersController {
 
   @MessagePattern('users.createOne')
   createOneUser(@Payload() user: CreateUserDto) {
-    console.log({ payload: user });
     return this.usersService.createUser(user);
   }
 
@@ -21,14 +20,12 @@ export class UsersController {
 
   @MessagePattern('users.getUserById')
   getUserById(@Payload() id: string) {
-    console.log(id);
-
     return this.usersService.getUserById(id);
   }
 
   @MessagePattern('users.updateUserById')
   updateUserById(@Payload() data: UpdateUserDto) {
-    return this.usersService.updateUserById(data.id, data.user);
+    return this.usersService.updateUserById(+data.id, data.user);
   }
 
   @MessagePattern('users.deleteUserById')

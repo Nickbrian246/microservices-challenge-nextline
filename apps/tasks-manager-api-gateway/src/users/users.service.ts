@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto';
 import { ClientProxy } from '@nestjs/microservices';
 import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
 import { catchError, switchMap } from 'rxjs';
-import { UserDto } from './dto/user.dto';
+import { UserWithoutIdAndEmail } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -37,7 +37,7 @@ export class UsersService {
     );
   }
 
-  UpdateUserById(user: UserDto, id: string) {
+  UpdateUserById(user: UserWithoutIdAndEmail, id: string) {
     return this.usersClient.send('users.updateUserById', { user, id }).pipe(
       catchError((err) => {
         throw this.microserviceErrorHandler.handleError(err);

@@ -5,13 +5,13 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { UserDto } from './user.dto';
+import { UserWithoutIdAndEmail } from './user.dto';
 import { Type } from 'class-transformer';
 
 export class UpdateUserDto {
   @ValidateNested()
-  @Type(() => UserDto)
-  user: UserDto;
+  @Type(() => UserWithoutIdAndEmail)
+  user: UserWithoutIdAndEmail;
 
   @IsString()
   id: string;
