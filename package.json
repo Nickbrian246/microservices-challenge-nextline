@@ -17,7 +17,15 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/microservices-challenge-nextline/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/microservices-challenge-nextline/test/jest-e2e.json",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "users:create-migration": "npm run typeorm -- migration:create ./apps/users/migrations/%npm_config_name%",
+    "users:run-migrations": "npm run typeorm migration:run -- -d ./apps/users/typeOrm.config.ts",
+    "users:revert-migrations": "npm run typeorm migration:revert -- -d ./apps/users/typeOrm.config.ts",
+    "tasks:create-migration": "npm run typeorm -- migration:create ./apps/tasks/migrations/%npm_config_name%",
+    "tasks:run-migrations": "npm run typeorm migration:run -- -d ./apps/tasks/typeOrm.config.ts",
+    "tasks:revert-migrations": "npm run typeorm migration:revert -- -d ./apps/tasks/typeOrm.config.ts"
+
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -29,6 +37,7 @@
     "@nestjs/typeorm": "^10.0.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "dotenv": "^16.4.5",
     "mysql2": "^3.11.3",
     "nestjs-typeorm-paginate": "^4.0.4",
     "reflect-metadata": "^0.2.0",
