@@ -3,9 +3,10 @@ import { TasksManagerApiGatewayController } from './tasks-manager-api-gateway.co
 import { TasksManagerApiGatewayService } from './tasks-manager-api-gateway.service';
 import { UsersModule } from './users/users.module';
 import { TasksModule } from './tasks/tasks.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UsersModule, TasksModule],
+  imports: [UsersModule, TasksModule, AuthModule],
   controllers: [TasksManagerApiGatewayController],
   providers: [TasksManagerApiGatewayService],
 })

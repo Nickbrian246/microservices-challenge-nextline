@@ -25,7 +25,6 @@
     "tasks:create-migration": "npm run typeorm -- migration:create ./apps/tasks/migrations/%npm_config_name%",
     "tasks:run-migrations": "npm run typeorm migration:run -- -d ./apps/tasks/typeOrm.config.ts",
     "tasks:revert-migrations": "npm run typeorm migration:revert -- -d ./apps/tasks/typeOrm.config.ts"
-
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -84,7 +83,11 @@
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "roots": [
-      "<rootDir>/apps/"
-    ]
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^@app/contracts(|/.*)$": "<rootDir>/libs/contracts/src/$1"
+    }
   }
 }

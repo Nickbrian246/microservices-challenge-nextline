@@ -12,7 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.getOrThrow('MYSQL_USERS_USERNAME'),
         password: configService.getOrThrow('MYSQL_USERS_PASSWORD'),
         database: configService.getOrThrow('MYSQL_DATABASE_USERS_DB_NAME'),
-        autoLoadEntities: false,
+        autoLoadEntities: true,
         synchronize: configService.getOrThrow('MYSQL_SYNCHRONIZE'),
       }),
       inject: [ConfigService],
