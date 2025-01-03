@@ -7,6 +7,7 @@ import {
 @Injectable()
 export class HandlerMicroServiceErrors {
   handleError(err: { message: string }): HttpException {
+    console.log({ err }, 'err');
     let code = err.message.split(',')[0];
 
     if (errorsWithCodeActions[code]) return errorsWithCodeActions[code]();

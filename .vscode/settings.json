@@ -1,7 +1,10 @@
 {
   "cSpell.words": [
+    "mysql",
+    "MYSQL",
     "nestjs",
     "nextline",
-    "typeorm"
+    "typeorm",
+    "wurstmeister"
   ]
 }

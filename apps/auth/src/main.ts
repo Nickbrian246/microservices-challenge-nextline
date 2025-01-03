@@ -1,14 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AuthAppModule } from './auth-app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-
+import { v4 as uuid } from 'uuid';
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AuthAppModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.KAFKA,
       options: {
-        port: 3003,
+        client: {
+          clientId: `auth-${uuid()}`,
+          brokers: ['localhost:9092'],
+        },
       },
     },
   );
