@@ -1,34 +1,34 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from '@app/contracts/users';
+import { USERS_PATTERN } from '@app/contracts/users/message.pattern';
 
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @MessagePattern('users.createOne')
+  @MessagePattern(USERS_PATTERN.CREATE_ONE)
   createOneUser(@Payload() user: CreateUserDto) {
     return this.usersService.createUser(user);
   }
 
-  @MessagePattern('users.findAll')
+  @MessagePattern(USERS_PATTERN.FIND_ALL)
   getUsers(@Payload() { limit, page }: { limit: number; page: number }) {
     return this.usersService.getUsers({ limit, page });
   }
 
-  @MessagePattern('users.getUserById')
+  @MessagePattern(USERS_PATTERN.GET_BY_ID)
   getUserById(@Payload() id: string) {
     return this.usersService.getUserById(id);
   }
 
-  @MessagePattern('users.updateUserById')
+  @MessagePattern(USERS_PATTERN.UPDATE_BY_ID)
   updateUserById(@Payload() data: UpdateUserDto) {
     return this.usersService.updateUserById(+data.id, data.user);
   }
 
-  @MessagePattern('users.deleteUserById')
+  @MessagePattern(USERS_PATTERN.DELETE_BY_ID)
   deleteUserById(@Payload() id: string) {
     return this.usersService.deleteUserById(id);
   }

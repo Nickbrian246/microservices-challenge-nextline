@@ -1,10 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto';
+
 import { ClientProxy } from '@nestjs/microservices';
 import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
 import { catchError, switchMap } from 'rxjs';
 import { UserWithoutIdAndEmail } from './dto/user.dto';
-
+import { CreateUserDto, UpdateUserDto } from '@app/contracts/users';
 @Injectable()
 export class UsersService {
   constructor(

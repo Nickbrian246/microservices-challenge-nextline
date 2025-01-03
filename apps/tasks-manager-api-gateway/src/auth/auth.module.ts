@@ -3,8 +3,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
-//TODO CREAR KAFKA DOCKERFILE
-//https://kafka.js.org/docs/running-kafka-in-development
+
 @Module({
   imports: [
     ClientsModule.register([
