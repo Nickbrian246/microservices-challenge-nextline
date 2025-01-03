@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { TaskStatus } from '../../types/tasks-status';
+import { TaskStatus } from '../types/tasks-status';
 
 export class Task {
   @IsString()

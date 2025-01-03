@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { CreateTaskDto, UpdateTaskDto } from '@app/contracts/tasks/dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { DeleteResult, Repository } from 'typeorm';
@@ -32,7 +31,8 @@ export class TasksService {
     const queryBuilder = this.TasksRepository.createQueryBuilder('c');
     queryBuilder.orderBy('c.title', 'DESC');
 
-    return paginate<Task>(queryBuilder, options);
+    const data = await paginate<Task>(queryBuilder, options);
+    return { ...data };
   }
 
   @errorHandler()

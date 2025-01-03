@@ -1,39 +1,39 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TasksService } from './tasks.service';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
-
+import { CreateTaskDto, UpdateTaskDto } from '@app/contracts/tasks/dto';
+import { TASKS_PATTERN } from '@app/contracts/tasks/dto';
 @Controller()
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @MessagePattern('tasks.createTask')
+  @MessagePattern(TASKS_PATTERN.CREATE_TASK)
   create(@Payload() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
   }
 
-  @MessagePattern('tasks.findAll')
+  @MessagePattern(TASKS_PATTERN.FIND_ALL)
   findAll(@Payload() { limit, page }: { limit: number; page: number }) {
+    console.log('limit', limit);
     return this.tasksService.findAll({ limit, page });
   }
 
-  @MessagePattern('tasks.getTaskById')
+  @MessagePattern(TASKS_PATTERN.GET_BY_ID)
   findOne(@Payload() id: string) {
     return this.tasksService.findOne(id);
   }
 
-  @MessagePattern('tasks.updateTaskById')
+  @MessagePattern(TASKS_PATTERN.UPDATE_BY_ID)
   update(@Payload() updateTaskDto: UpdateTaskDto) {
     return this.tasksService.update(updateTaskDto.id, updateTaskDto);
   }
 
-  @MessagePattern('tasks.deleteTaskById')
+  @MessagePattern(TASKS_PATTERN.DELETE_BY_ID)
   remove(@Payload() id: string) {
     return this.tasksService.remove(id);
   }
 
-  @MessagePattern('tasks.deleteTasksByUserId')
+  @MessagePattern(TASKS_PATTERN.DELETE_BY_USER_ID)
   deleteTasksByUserId(@Payload() id: string) {
     return this.tasksService.deleteTasksByUserId(id);
   }

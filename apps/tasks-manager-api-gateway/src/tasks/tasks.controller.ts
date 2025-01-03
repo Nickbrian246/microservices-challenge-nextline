@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Put,
@@ -42,7 +41,14 @@ export class TasksController {
   @Put(':id')
   @UseGuards(ValidateForeignKey)
   update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
-    return this.tasksService.update(id, updateTaskDto);
+    return this.tasksService.update({
+      id,
+      updateTaskDto: {
+        description: updateTaskDto.description,
+        state: updateTaskDto.state,
+        title: updateTaskDto.title,
+      },
+    });
   }
 
   @Delete(':id')

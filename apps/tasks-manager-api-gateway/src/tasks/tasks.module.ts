@@ -10,8 +10,11 @@ import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
     ClientsModule.register([
       {
         name: 'TASKS_CLIENT',
-        transport: Transport.TCP,
-        options: { port: 3002 },
+        transport: Transport.KAFKA,
+        options: {
+          client: { brokers: ['localhost:9092'], clientId: 'tasks-gateway' },
+          consumer: { groupId: 'tasks-microservice' },
+        },
       },
     ]),
     UsersModule,

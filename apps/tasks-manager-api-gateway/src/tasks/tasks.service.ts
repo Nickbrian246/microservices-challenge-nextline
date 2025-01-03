@@ -1,43 +1,63 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { CreateTaskDto, UpdateTaskDto } from './dto';
-import { ClientProxy } from '@nestjs/microservices';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientKafka } from '@nestjs/microservices';
 import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
-import { catchError } from 'rxjs';
+import { catchError, map } from 'rxjs';
+import { TASKS_PATTERN } from '@app/contracts/tasks/dto';
+import { CreateTaskDto, UpdateTaskDto } from '@app/contracts/tasks/dto';
 
 @Injectable()
-export class TasksService {
+export class TasksService implements OnModuleInit {
   constructor(
-    @Inject('TASKS_CLIENT') private tasksService: ClientProxy,
+    @Inject('TASKS_CLIENT') private tasksService: ClientKafka,
     private microserviceErrorHandler: HandlerMicroServiceErrors,
   ) {}
 
+  async onModuleInit() {
+    this.tasksService.subscribeToResponseOf(TASKS_PATTERN.CREATE_TASK);
+    this.tasksService.subscribeToResponseOf(TASKS_PATTERN.FIND_ALL);
+    this.tasksService.subscribeToResponseOf(TASKS_PATTERN.GET_BY_ID);
+    this.tasksService.subscribeToResponseOf(TASKS_PATTERN.UPDATE_BY_ID);
+    this.tasksService.subscribeToResponseOf(TASKS_PATTERN.DELETE_BY_ID);
+    this.tasksService.subscribeToResponseOf(TASKS_PATTERN.DELETE_BY_USER_ID);
+    await this.tasksService.connect();
+  }
   create(createTaskDto: CreateTaskDto) {
-    return this.tasksService.send('tasks.createTask', createTaskDto).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService
+      .send(TASKS_PATTERN.CREATE_TASK, createTaskDto)
+      .pipe(
+        catchError((err) => {
+          throw this.microserviceErrorHandler.handleError(err);
+        }),
+      );
   }
 
   findAll(page: number, limit: number) {
-    return this.tasksService.send('tasks.findAll', { page, limit }).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService
+      .send(TASKS_PATTERN.FIND_ALL, JSON.stringify({ page: 10, limit: 1 }))
+      .pipe(
+        map((response) => {
+          console.log(response, 'response from gateway');
+          return response;
+        }),
+        catchError((err) => {
+          throw this.microserviceErrorHandler.handleError(err);
+        }),
+      );
   }
 
   findOne(id: number) {
-    return this.tasksService.send('tasks.getTaskById', id).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService
+      .send(TASKS_PATTERN.GET_BY_ID, JSON.stringify(id))
+      .pipe(
+        catchError((err) => {
+          throw this.microserviceErrorHandler.handleError(err);
+        }),
+      );
   }
 
-  update(id: string, updateTaskDto: UpdateTaskDto) {
+  update(updateTaskDto: UpdateTaskDto) {
     return this.tasksService
-      .send('tasks.updateTaskById', { id, updateTaskDto })
+      .send(TASKS_PATTERN.UPDATE_BY_ID, JSON.stringify(updateTaskDto))
       .pipe(
         catchError((err) => {
           throw this.microserviceErrorHandler.handleError(err);
@@ -46,18 +66,22 @@ export class TasksService {
   }
 
   remove(id: string) {
-    return this.tasksService.send('tasks.deleteTaskById', id).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService
+      .send(TASKS_PATTERN.DELETE_BY_ID, JSON.stringify(id))
+      .pipe(
+        catchError((err) => {
+          throw this.microserviceErrorHandler.handleError(err);
+        }),
+      );
   }
 
   deleteTasksByUserId(id: string) {
-    return this.tasksService.send('tasks.deleteTasksByUserId', id).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService
+      .send(TASKS_PATTERN.DELETE_BY_USER_ID, JSON.stringify(id))
+      .pipe(
+        catchError((err) => {
+          throw this.microserviceErrorHandler.handleError(err);
+        }),
+      );
   }
 }
