@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto, UserWithoutEmail } from './dto/update-user.dto';
+import { CreateUserDto, UserWithoutEmail } from '@app/contracts/users';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { UserDto } from './dto';
 import { ApiSuccessResponse } from '../types/api-success-response';
-import { errorHandler } from '../decorators/error-handler';
+
 import {
   IPaginationOptions,
   paginate,
