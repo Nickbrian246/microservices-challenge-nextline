@@ -1,9 +1,11 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto, UpdateTaskDto } from '@app/contracts/tasks/dto';
 import { TASKS_PATTERN } from '@app/contracts/tasks/dto';
+import { TypeOrmExceptionFilter } from '../exception-filters/type-orm-exception-filter';
 @Controller()
+@UseFilters(new TypeOrmExceptionFilter('TypeOrmExceptionFilter'))
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -14,7 +16,6 @@ export class TasksController {
 
   @MessagePattern(TASKS_PATTERN.FIND_ALL)
   findAll(@Payload() { limit, page }: { limit: number; page: number }) {
-    console.log('limit', limit);
     return this.tasksService.findAll({ limit, page });
   }
 

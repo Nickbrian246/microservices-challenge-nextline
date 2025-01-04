@@ -17,7 +17,6 @@ export class TasksService {
     @InjectRepository(Task) private readonly TasksRepository: Repository<Task>,
   ) {}
 
-  @errorHandler()
   async create(createTasK: CreateTaskDto): Promise<ApiSuccessResponse<Task>> {
     const data = await this.TasksRepository.save({
       ...createTasK,
@@ -26,7 +25,6 @@ export class TasksService {
     return { data };
   }
 
-  @errorHandler()
   async findAll(options: IPaginationOptions): Promise<Pagination<Task>> {
     const queryBuilder = this.TasksRepository.createQueryBuilder('c');
     queryBuilder.orderBy('c.title', 'DESC');
@@ -35,7 +33,6 @@ export class TasksService {
     return { ...data };
   }
 
-  @errorHandler()
   async findOne(id: string): Promise<ApiSuccessResponse<Task>> {
     const data = await this.TasksRepository.findOne({
       where: { id: parseInt(id) },
@@ -44,7 +41,6 @@ export class TasksService {
     return { data };
   }
 
-  @errorHandler()
   async update(
     id: string,
     updateTaskDto: UpdateTaskDto,
@@ -66,13 +62,11 @@ export class TasksService {
     return { data };
   }
 
-  @errorHandler()
   async remove(id: string): Promise<ApiSuccessResponse<DeleteResult>> {
     const data = await this.TasksRepository.delete(parseInt(id));
     return { data };
   }
 
-  @errorHandler()
   async deleteTasksByUserId(
     id: string,
   ): Promise<ApiSuccessResponse<DeleteResult>> {
