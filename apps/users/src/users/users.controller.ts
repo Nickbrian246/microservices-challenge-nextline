@@ -1,10 +1,11 @@
-import { Controller } from '@nestjs/common';
+import { Controller, UseFilters } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from '@app/contracts/users';
 import { USERS_PATTERN } from '@app/contracts/users/message.pattern';
-
+import { TypeOrmExceptionFilter } from '../exception-filters/type-orm-exception-filter';
 @Controller()
+@UseFilters(new TypeOrmExceptionFilter('TypeOrmExceptionFilter'))
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

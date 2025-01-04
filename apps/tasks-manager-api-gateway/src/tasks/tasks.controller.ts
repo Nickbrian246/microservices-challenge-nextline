@@ -20,7 +20,7 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  @UseGuards(ValidateForeignKey)
+  //@UseGuards(ValidateForeignKey)
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
   }

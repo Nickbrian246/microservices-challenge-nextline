@@ -22,6 +22,8 @@ export class UsersController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   ) {
+    console.log('entrando desde el gateway de users');
+
     return this.usersService.getAllUsers(page, limit);
   }
 
@@ -37,7 +39,14 @@ export class UsersController {
 
   @Put()
   updateUser(@Body() data: UpdateUserDto) {
-    return this.usersService.UpdateUserById(data.user, data.id);
+    return this.usersService.UpdateUserById({
+      id: data.id,
+      user: {
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+        id: data.id,
+      },
+    });
   }
 
   @Delete('/:id')

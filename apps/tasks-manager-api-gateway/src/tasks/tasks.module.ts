@@ -21,5 +21,6 @@ import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
   ],
   controllers: [TasksController],
   providers: [TasksService, HandlerMicroServiceErrors],
+  exports: [TasksService],
 })
 export class TasksModule {}

@@ -17,6 +17,7 @@ export function errorHandler() {
             `${error.driverError.code}, ${error.message}`,
           );
         }
+        console.log('manejador de errores', { error });
         throw new CustomException('bad request');
       }
     };

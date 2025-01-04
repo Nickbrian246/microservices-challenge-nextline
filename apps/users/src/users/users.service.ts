@@ -28,8 +28,9 @@ export class UsersService {
   async getUsers(options: IPaginationOptions): Promise<Pagination<User>> {
     const queryBuilder = this.userRepository.createQueryBuilder('c');
     queryBuilder.orderBy('c.firstName', 'DESC');
+    const data = await paginate<User>(queryBuilder, options);
 
-    return paginate<User>(queryBuilder, options);
+    return { ...data };
   }
 
   @errorHandler()
