@@ -3,7 +3,6 @@ import { CreateTaskDto, UpdateTaskDto } from '@app/contracts/tasks/dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
 import { DeleteResult, Repository } from 'typeorm';
-import { errorHandler } from '../decorators/error-handler';
 import { ApiSuccessResponse } from '../types/api-success-response';
 import {
   IPaginationOptions,
