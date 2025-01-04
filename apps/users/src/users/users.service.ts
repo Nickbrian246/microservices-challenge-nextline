@@ -18,13 +18,11 @@ export class UsersService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
-  @errorHandler()
   async createUser(user: CreateUserDto): Promise<ApiSuccessResponse<User>> {
     const data = await this.userRepository.save({ ...user });
     return { data };
   }
 
-  @errorHandler()
   async getUsers(options: IPaginationOptions): Promise<Pagination<User>> {
     const queryBuilder = this.userRepository.createQueryBuilder('c');
     queryBuilder.orderBy('c.firstName', 'DESC');
@@ -33,7 +31,6 @@ export class UsersService {
     return { ...data };
   }
 
-  @errorHandler()
   async getUserById(id: string): Promise<ApiSuccessResponse<User>> {
     const data = await this.userRepository.findOne({
       where: { id: parseInt(id) },
@@ -42,7 +39,6 @@ export class UsersService {
     return { data };
   }
 
-  @errorHandler()
   async updateUserById(
     id: number,
     user: UserWithoutEmail,
@@ -63,7 +59,6 @@ export class UsersService {
     return { data };
   }
 
-  @errorHandler()
   async deleteUserById(id: string): Promise<ApiSuccessResponse<DeleteResult>> {
     const data = await this.userRepository.delete(parseInt(id));
     return { data };
