@@ -1,9 +1,12 @@
 {
   "cSpell.words": [
+    "kafkajs",
     "mysql",
     "MYSQL",
     "nestjs",
     "nextline",
+    "Partitioner",
+    "Partitioners",
     "typeorm",
     "wurstmeister"
   ]

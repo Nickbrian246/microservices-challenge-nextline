@@ -5,7 +5,7 @@ import { CreateTaskDto, UpdateTaskDto } from '@app/contracts/tasks/dto';
 import { TASKS_PATTERN } from '@app/contracts/tasks/dto';
 import { TypeOrmExceptionFilter } from '../exception-filters/type-orm-exception-filter';
 @Controller()
-@UseFilters(new TypeOrmExceptionFilter('TypeOrmExceptionFilter'))
+@UseFilters(new TypeOrmExceptionFilter('Tasks microservice'))
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
@@ -31,11 +31,15 @@ export class TasksController {
 
   @MessagePattern(TASKS_PATTERN.DELETE_BY_ID)
   remove(@Payload() id: string) {
+    console.log('remove', id);
+
     return this.tasksService.remove(id);
   }
 
   @MessagePattern(TASKS_PATTERN.DELETE_BY_USER_ID)
   deleteTasksByUserId(@Payload() id: string) {
+    console.log('deleteTasksByUserId', id);
+
     return this.tasksService.deleteTasksByUserId(id);
   }
 }

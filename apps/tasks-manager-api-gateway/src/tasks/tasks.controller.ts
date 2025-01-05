@@ -20,7 +20,7 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  //@UseGuards(ValidateForeignKey)
+  @UseGuards(ValidateForeignKey)
   create(@Body() createTaskDto: CreateTaskDto) {
     return this.tasksService.create(createTaskDto);
   }
@@ -56,7 +56,7 @@ export class TasksController {
     return this.tasksService.remove(id);
   }
 
-  @Delete(':userId')
+  @Delete('byUserId/:userId')
   deleteTasksByUserId(@Param('userId') id: string) {
     return this.tasksService.deleteTasksByUserId(id);
   }

@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { TasksController } from './tasks.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UsersModule } from '../users/users.module';
 import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
+import { Partitioners } from 'kafkajs';
 
 @Module({
   imports: [
@@ -14,13 +15,16 @@ import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
         options: {
           client: { brokers: ['localhost:9092'], clientId: 'tasks-gateway' },
           consumer: { groupId: 'tasks-microservice' },
+          producer: {
+            createPartitioner: Partitioners.LegacyPartitioner,
+          },
         },
       },
     ]),
-    UsersModule,
+    forwardRef(() => UsersModule),
   ],
   controllers: [TasksController],
   providers: [TasksService, HandlerMicroServiceErrors],
-  exports: [TasksService],
+  exports: [TasksService, TasksModule],
 })
 export class TasksModule {}

@@ -3,6 +3,8 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { TasksModule } from '../tasks/tasks.module';
+import { Partitioners } from 'kafkajs';
 @Module({
   imports: [
     ClientsModule.register([
@@ -12,17 +14,16 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         options: {
           client: { brokers: ['localhost:9092'], clientId: 'users-gateway' },
           consumer: { groupId: 'users-microservice' },
+          producer: {
+            createPartitioner: Partitioners.LegacyPartitioner,
+          },
         },
       },
-      // {
-      //   name: 'TASKS_CLIENT',
-      //   transport: Transport.TCP,
-      //   options: { port: 3002 },
-      // },
     ]),
+    TasksModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, HandlerMicroServiceErrors],
-  exports: [UsersService],
+  exports: [UsersService, UsersModule],
 })
 export class UsersModule {}

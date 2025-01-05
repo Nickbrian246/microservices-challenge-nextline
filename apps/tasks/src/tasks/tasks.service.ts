@@ -27,8 +27,9 @@ export class TasksService {
   async findAll(options: IPaginationOptions): Promise<Pagination<Task>> {
     const queryBuilder = this.TasksRepository.createQueryBuilder('c');
     queryBuilder.orderBy('c.title', 'DESC');
+    const data = await paginate<Task>(this.TasksRepository, options);
+    console.log(data);
 
-    const data = await paginate<Task>(queryBuilder, options);
     return { ...data };
   }
 
@@ -69,6 +70,11 @@ export class TasksService {
   async deleteTasksByUserId(
     id: string,
   ): Promise<ApiSuccessResponse<DeleteResult>> {
+    console.log({
+      id,
+      type: typeof id,
+    });
+
     const data = await this.TasksRepository.delete({ userId: parseInt(id) });
     return { data };
   }

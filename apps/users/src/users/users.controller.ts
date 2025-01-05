@@ -5,7 +5,7 @@ import { CreateUserDto, UpdateUserDto } from '@app/contracts/users';
 import { USERS_PATTERN } from '@app/contracts/users/message.pattern';
 import { TypeOrmExceptionFilter } from '../exception-filters/type-orm-exception-filter';
 @Controller()
-@UseFilters(new TypeOrmExceptionFilter('TypeOrmExceptionFilter'))
+@UseFilters(new TypeOrmExceptionFilter('Users microservice'))
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

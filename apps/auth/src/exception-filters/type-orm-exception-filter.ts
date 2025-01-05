@@ -11,16 +11,16 @@ export class TypeOrmExceptionFilter
   implements RpcExceptionFilter<TypeORMError>
 {
   private readonly context: string;
+  private readonly logger = new Logger('TypeOrmExceptionFilter');
   constructor(context: string) {
     this.context = context;
   }
-  private readonly logger = new Logger('TypeOrmExceptionFilter');
   catch(exception: QueryFailedError, host: ArgumentsHost): Observable<any> {
-    this.logger.warn({ exception, context: this.context });
+    this.logger.error({ exception, context: this.context });
 
     throw new RpcException(
       // @ts-ignore
-      `${exception.driverError.code}, ${exception.message}`,
+      `${exception.driverError.code}, ${exception.message}, context: ${this.context}`,
     );
   }
 }

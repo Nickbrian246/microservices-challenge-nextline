@@ -1,4 +1,9 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
 
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { ClientKafka, ClientProxy } from '@nestjs/microservices';
@@ -7,7 +12,7 @@ import { catchError } from 'rxjs';
 import { CreateAuthDto, AUTH_PATTERN } from '@app/contracts/auth';
 
 @Injectable()
-export class AuthService implements OnModuleInit {
+export class AuthService implements OnModuleInit, OnModuleDestroy {
   constructor(
     @Inject('AUTH_CLIENT') private tasksService: ClientKafka,
     private microserviceErrorHandler: HandlerMicroServiceErrors,
@@ -20,6 +25,9 @@ export class AuthService implements OnModuleInit {
     this.tasksService.subscribeToResponseOf(AUTH_PATTERN.UPDATE);
     this.tasksService.subscribeToResponseOf(AUTH_PATTERN.REMOVE);
     await this.tasksService.connect();
+  }
+  async onModuleDestroy() {
+    await this.tasksService.close();
   }
   create(createAuthDto: CreateAuthDto) {
     console.log({ createAuthDto }, AUTH_PATTERN.CREATE);

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AuthAppModule } from './auth-app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { v4 as uuid } from 'uuid';
+import { Partitioners } from 'kafkajs';
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AuthAppModule,
@@ -11,6 +12,12 @@ async function bootstrap() {
         client: {
           clientId: `auth-${uuid()}`,
           brokers: ['localhost:9092'],
+        },
+        consumer: {
+          groupId: 'auth-microservice-group',
+        },
+        producer: {
+          createPartitioner: Partitioners.LegacyPartitioner,
         },
       },
     },

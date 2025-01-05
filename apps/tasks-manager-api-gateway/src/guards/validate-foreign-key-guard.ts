@@ -5,7 +5,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { lastValueFrom } from 'rxjs';
 import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
 
@@ -19,7 +19,6 @@ export class ValidateForeignKey implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const { userId } = request.body;
-
     if (!userId) {
       throw new BadRequestException('User ID not provided in request body');
     }

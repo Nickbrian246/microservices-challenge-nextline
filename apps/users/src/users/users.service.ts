@@ -1,15 +1,14 @@
-import { Injectable } from '@nestjs/common';
 import { CreateUserDto, UserWithoutEmail } from '@app/contracts/users';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
-import { User } from './entities/user.entity';
-import { ApiSuccessResponse } from '../types/api-success-response';
-
 import {
   IPaginationOptions,
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
+import { DeleteResult, Repository } from 'typeorm';
+import { ApiSuccessResponse } from '../types/api-success-response';
+import { User } from './entities/user.entity';
 @Injectable()
 export class UsersService {
   constructor(
@@ -31,7 +30,7 @@ export class UsersService {
 
   async getUserById(id: string): Promise<ApiSuccessResponse<User>> {
     const data = await this.userRepository.findOne({
-      where: { id: parseInt(id) },
+      where: { id: +id },
     });
 
     return { data };
@@ -58,7 +57,12 @@ export class UsersService {
   }
 
   async deleteUserById(id: string): Promise<ApiSuccessResponse<DeleteResult>> {
-    const data = await this.userRepository.delete(parseInt(id));
+    console.log({
+      id,
+      type: typeof id,
+    });
+
+    const data = await this.userRepository.delete({ id: +id });
     return { data };
   }
 }
