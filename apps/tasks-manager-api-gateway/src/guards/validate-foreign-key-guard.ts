@@ -1,20 +1,15 @@
 import {
-  Injectable,
+  BadRequestException,
   CanActivate,
   ExecutionContext,
-  BadRequestException,
+  Injectable,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { catchError, map } from 'rxjs/operators';
 import { lastValueFrom } from 'rxjs';
-import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class ValidateForeignKey implements CanActivate {
-  constructor(
-    private usersService: UsersService,
-    private microserviceErrorHandler: HandlerMicroServiceErrors,
-  ) {}
+  constructor(private usersService: UsersService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -23,22 +18,12 @@ export class ValidateForeignKey implements CanActivate {
       throw new BadRequestException('User ID not provided in request body');
     }
 
-    try {
-      const user = await lastValueFrom(
-        this.usersService.getUserById(userId).pipe(
-          catchError((err) => {
-            throw this.microserviceErrorHandler.handleError(err);
-          }),
-        ),
-      );
+    const user = await lastValueFrom(this.usersService.getUserById(userId));
 
-      if (!user.data) {
-        throw new BadRequestException('User not found');
-      }
-
-      return true;
-    } catch (error) {
-      throw this.microserviceErrorHandler.handleError(error);
+    if (!user.data) {
+      throw new BadRequestException('User not found');
     }
+
+    return true;
   }
 }

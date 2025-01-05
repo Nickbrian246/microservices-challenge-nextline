@@ -10,12 +10,15 @@ import {
   Query,
   DefaultValuePipe,
   ParseIntPipe,
+  UseFilters,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto, UpdateTaskDto } from './dto';
 import { ValidateForeignKey } from '../guards/validate-foreign-key-guard';
+import { CustomExceptionFilter } from '../exception-filters/custom-exception-filter';
 
 @Controller('tasks')
+@UseFilters(new CustomExceptionFilter('auth'))
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 

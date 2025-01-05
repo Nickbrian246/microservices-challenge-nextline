@@ -5,17 +5,16 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
-import { catchError, map, Observable } from 'rxjs';
-import { TASKS_PATTERN } from '@app/contracts/tasks/dto';
-import { CreateTaskDto, UpdateTaskDto } from '@app/contracts/tasks/dto';
+import {
+  CreateTaskDto,
+  TASKS_PATTERN,
+  UpdateTaskDto,
+} from '@app/contracts/tasks/dto';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class TasksService implements OnModuleInit, OnModuleDestroy {
-  constructor(
-    @Inject('TASKS_CLIENT') private tasksService: ClientKafka,
-    private microserviceErrorHandler: HandlerMicroServiceErrors,
-  ) {}
+  constructor(@Inject('TASKS_CLIENT') private tasksService: ClientKafka) {}
 
   async onModuleInit() {
     this.tasksService.subscribeToResponseOf(TASKS_PATTERN.CREATE_TASK);
@@ -32,64 +31,38 @@ export class TasksService implements OnModuleInit, OnModuleDestroy {
   }
 
   create(createTaskDto: CreateTaskDto) {
-    return this.tasksService
-      .send(TASKS_PATTERN.CREATE_TASK, JSON.stringify(createTaskDto))
-      .pipe(
-        catchError((err) => {
-          throw this.microserviceErrorHandler.handleError(err);
-        }),
-      );
+    return this.tasksService.send(
+      TASKS_PATTERN.CREATE_TASK,
+      JSON.stringify(createTaskDto),
+    );
   }
 
   findAll(page: number, limit: number) {
-    return this.tasksService
-      .send(TASKS_PATTERN.FIND_ALL, JSON.stringify({ page, limit }))
-      .pipe(
-        map((response) => {
-          console.log(response, 'response from gateway');
-          return response;
-        }),
-        catchError((err) => {
-          throw this.microserviceErrorHandler.handleError(err);
-        }),
-      );
+    return this.tasksService.send(
+      TASKS_PATTERN.FIND_ALL,
+      JSON.stringify({ page, limit }),
+    );
   }
 
   findOne(id: number) {
-    return this.tasksService
-      .send(TASKS_PATTERN.GET_BY_ID, JSON.stringify(id))
-      .pipe(
-        catchError((err) => {
-          throw this.microserviceErrorHandler.handleError(err);
-        }),
-      );
+    return this.tasksService.send(TASKS_PATTERN.GET_BY_ID, JSON.stringify(id));
   }
 
   update(updateTaskDto: UpdateTaskDto) {
-    return this.tasksService
-      .send(TASKS_PATTERN.UPDATE_BY_ID, JSON.stringify(updateTaskDto))
-      .pipe(
-        catchError((err) => {
-          throw this.microserviceErrorHandler.handleError(err);
-        }),
-      );
+    return this.tasksService.send(
+      TASKS_PATTERN.UPDATE_BY_ID,
+      JSON.stringify(updateTaskDto),
+    );
   }
 
   remove(id: string) {
-    return this.tasksService
-      .send(TASKS_PATTERN.DELETE_BY_ID, JSON.stringify(id))
-      .pipe(
-        catchError((err) => {
-          throw this.microserviceErrorHandler.handleError(err);
-        }),
-      );
+    return this.tasksService.send(
+      TASKS_PATTERN.DELETE_BY_ID,
+      JSON.stringify(id),
+    );
   }
 
   deleteTasksByUserId(id: string): Observable<CreateTaskDto> {
-    return this.tasksService.send(TASKS_PATTERN.DELETE_BY_USER_ID, id).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService.send(TASKS_PATTERN.DELETE_BY_USER_ID, id);
   }
 }

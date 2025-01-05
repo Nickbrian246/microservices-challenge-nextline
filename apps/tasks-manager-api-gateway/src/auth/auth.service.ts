@@ -1,22 +1,16 @@
+import { AUTH_PATTERN, CreateAuthDto } from '@app/contracts/auth';
 import {
   Inject,
   Injectable,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
-
+import { ClientKafka } from '@nestjs/microservices';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import { ClientKafka, ClientProxy } from '@nestjs/microservices';
-import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
-import { catchError } from 'rxjs';
-import { CreateAuthDto, AUTH_PATTERN } from '@app/contracts/auth';
 
 @Injectable()
 export class AuthService implements OnModuleInit, OnModuleDestroy {
-  constructor(
-    @Inject('AUTH_CLIENT') private tasksService: ClientKafka,
-    private microserviceErrorHandler: HandlerMicroServiceErrors,
-  ) {}
+  constructor(@Inject('AUTH_CLIENT') private tasksService: ClientKafka) {}
 
   async onModuleInit() {
     this.tasksService.subscribeToResponseOf(AUTH_PATTERN.CREATE);
@@ -30,47 +24,28 @@ export class AuthService implements OnModuleInit, OnModuleDestroy {
     await this.tasksService.close();
   }
   create(createAuthDto: CreateAuthDto) {
-    console.log({ createAuthDto }, AUTH_PATTERN.CREATE);
-    return this.tasksService
-      .send(AUTH_PATTERN.CREATE, JSON.stringify(createAuthDto))
-      .pipe(
-        catchError((err) => {
-          throw this.microserviceErrorHandler.handleError(err);
-        }),
-      );
+    return this.tasksService.send(
+      AUTH_PATTERN.CREATE,
+      JSON.stringify(createAuthDto),
+    );
   }
 
   findAll() {
-    return this.tasksService.send(AUTH_PATTERN.FIND_ALL, {}).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService.send(AUTH_PATTERN.FIND_ALL, {});
   }
 
   findOne(id: number) {
-    return this.tasksService.send(AUTH_PATTERN.FIND_ONE, id).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService.send(AUTH_PATTERN.FIND_ONE, id);
   }
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
-    return this.tasksService
-      .send(AUTH_PATTERN.UPDATE, { id, ...updateAuthDto })
-      .pipe(
-        catchError((err) => {
-          throw this.microserviceErrorHandler.handleError(err);
-        }),
-      );
+    return this.tasksService.send(AUTH_PATTERN.UPDATE, {
+      id,
+      ...updateAuthDto,
+    });
   }
 
   remove(id: number) {
-    return this.tasksService.send(AUTH_PATTERN.REMOVE, id).pipe(
-      catchError((err) => {
-        throw this.microserviceErrorHandler.handleError(err);
-      }),
-    );
+    return this.tasksService.send(AUTH_PATTERN.REMOVE, id);
   }
 }

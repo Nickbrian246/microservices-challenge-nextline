@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
-import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { TasksModule } from '../tasks/tasks.module';
 import { Partitioners } from 'kafkajs';
+import { TasksModule } from '../tasks/tasks.module';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 @Module({
   imports: [
     ClientsModule.register([
@@ -23,7 +22,7 @@ import { Partitioners } from 'kafkajs';
     TasksModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, HandlerMicroServiceErrors],
+  providers: [UsersService],
   exports: [UsersService, UsersModule],
 })
 export class UsersModule {}

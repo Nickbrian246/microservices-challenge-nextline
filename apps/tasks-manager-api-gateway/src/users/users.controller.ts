@@ -9,11 +9,14 @@ import {
   Query,
   DefaultValuePipe,
   ParseIntPipe,
+  UseFilters,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dto';
+import { CustomExceptionFilter } from '../exception-filters/custom-exception-filter';
 
 @Controller('users')
+@UseFilters(new CustomExceptionFilter('auth'))
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -22,8 +25,6 @@ export class UsersController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
   ) {
-    console.log('entrando desde el gateway de users');
-
     return this.usersService.getAllUsers(page, limit);
   }
 

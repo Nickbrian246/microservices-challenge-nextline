@@ -1,9 +1,12 @@
 import { Controller, UseFilters } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from './auth.service';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { TypeOrmExceptionFilter } from '../exception-filters/type-orm-exception-filter';
-import { CreateAuthDto, AUTH_PATTERN } from '@app/contracts/auth';
+import {
+  CreateAuthDto,
+  UpdateAuthDto,
+  AUTH_PATTERN,
+} from '@app/contracts/auth';
 
 @Controller()
 @UseFilters(new TypeOrmExceptionFilter('AuthController'))

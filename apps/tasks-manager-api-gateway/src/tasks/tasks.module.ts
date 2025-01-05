@@ -3,7 +3,6 @@ import { TasksService } from './tasks.service';
 import { TasksController } from './tasks.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UsersModule } from '../users/users.module';
-import { HandlerMicroServiceErrors } from '../utils/custom-error-handler';
 import { Partitioners } from 'kafkajs';
 
 @Module({
@@ -24,7 +23,7 @@ import { Partitioners } from 'kafkajs';
     forwardRef(() => UsersModule),
   ],
   controllers: [TasksController],
-  providers: [TasksService, HandlerMicroServiceErrors],
+  providers: [TasksService],
   exports: [TasksService, TasksModule],
 })
 export class TasksModule {}
