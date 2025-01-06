@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package auth;
+
+service UserService {
+  rpc GetAllUsers(PaginationDto) returns (User);
+
+  rpc GetUserById(UserById) returns (User);
+
+  rpc CreateOneUser(CreteUser) returns (User);
+
+  rpc UpdateUser(UpdateOneUser) returns (User);
+
+  rpc DeleteUserById(UserById) returns (OperationStatus);
+}
+
+
+enum Roles {
+  ADMIN = 0;
+  USER = 1;
+}
+
+enum OperationTypesStatus {
+  OK = 0;
+}
+
+message User {
+  int32 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  string password = 5;
+  Roles role = 6;
+  string createdAt = 7; // Fecha y hora en formato ISO (o puedes usar google.protobuf.Timestamp)
+  string updatedAt = 8;
+  optional  string deletedAt = 9; // Opcional, puede ser null
+}
+message CreteUser {
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+  string password = 4;
+}
+
+message UpdateOneUser {
+  string firstName = 1;
+  string lastName = 2;
+}
+message UserById {
+  string id = 1;
+}
+
+message OperationStatus {
+  OperationTypesStatus status = 1;
+}
+
+message PaginationDto {
+  int32 page = 1;
+  int32 limit =2;
+}
+
+message EmptyArgument{}

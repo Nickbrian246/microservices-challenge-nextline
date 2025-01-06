@@ -7,6 +7,8 @@
     "nextline",
     "Partitioner",
     "Partitioners",
+    "protobuf",
+    "protoc",
     "typeorm",
     "wurstmeister"
   ]
